@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сайт товаров</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .dark .dark\:bg-gray-900 { background-color: #1a202c; }
+    .dark .dark\:text-white { color: #ffffff; }
+    /* Стили для мобильной версии - кнопка гамбургера снизу */
+    @media (max-width: 768px) {
+      .mobile-navbar-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #38b2ac; /* Цвет кнопки */
+        color: white;
+        padding: 12px;
+        border-radius: 50%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        z-index: 60;
+      }
+      .mobile-navbar {
+        background-color: #38b2ac; /* Цвет фона шапки */
+        color: white;
+        padding: 16px;
+        text-align: left;
+      }
+    }
+    
+    /* Стили для ПК - кнопка гамбургера сверху */
+    @media (min-width: 769px) {
+      .pc-navbar-btn {
+        display: block;
+        background-color: transparent;
+        color: white;
+        font-size: 2rem;
+        border: none;
+        cursor: pointer;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white dark:bg-gray-900 dark:text-white">
+
+  <!-- Navbar для ПК -->
+  <nav class="bg-teal-500 p-4 shadow-md hidden lg:flex justify-between items-center">
+    <h1 class="text-xl font-bold text-white">Категории</h1>
+    <!-- Кнопка гамбургера для ПК -->
+    <button onclick="toggleSidebar()" class="pc-navbar-btn lg:block">
+      ☰
+    </button>
+  </nav>
+
+  <!-- Navbar для мобильной версии -->
+  <nav class="mobile-navbar lg:hidden fixed top-0 w-full z-50">
+    <div class="flex justify-between items-center">
+      <h1 class="text-lg font-bold text-white">Категории</h1>
+    </nav>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="hidden fixed inset-0 bg-gray-800 bg-opacity-90 z-50">
+    <div class="p-4 bg-teal-500">
+      <h2 class="text-xl font-bold text-white">Категории</h2>
+      <button onclick="toggleSidebar()" class="absolute top-4 right-4 text-white">×</button>
+      <input type="text" placeholder="Поиск товаров" class="w-full mt-4 p-2 rounded focus:outline-none focus:ring-2 focus:ring-teal-300">
+    </div>
+    <ul class="p-4 space-y-2 text-white">
+      <li onclick="loadCategory('Одежда')" class="cursor-pointer hover:bg-teal-600 p-2 rounded">👕 Одежда</li>
+      <li onclick="loadCategory('Продукты')" class="cursor-pointer hover:bg-teal-600 p-2 rounded">🍓 Продукты</li>
+      <li onclick="loadCategory('Красота')" class="cursor-pointer hover:bg-teal-600 p-2 rounded">✨ Красота</li>
+      <li onclick="loadCategory('Автомобиль')" class="cursor-pointer hover:bg-teal-600 p-2 rounded">🚗 Автомобиль</li>
+      <li onclick="loadCategory('Зоотовары')" class="cursor-pointer hover:bg-teal-600 p-2 rounded">🐾 Зоотовары</li>
+      <li onclick="loadCategory('Бытовая химия и гигиена')" class="cursor-pointer hover:bg-teal-600 p-2 rounded">🧴 Бытовая химия и гигиена</li>
+      <li onclick="loadCategory('Детские товары')" class="cursor-pointer hover:bg-teal-600 p-2 rounded">👶 Детские товары</li>
+      <li onclick="loadCategory('Аудио')" class="cursor-pointer hover:bg-teal-600 p-2 rounded">🎶 Аудио</li>
+    </ul>
+  </div>
+
+  <!-- Кнопка гамбургера для мобильной версии -->
+  <button onclick="toggleSidebar()" class="mobile-navbar-btn lg:hidden">
+    <span class="text-white">☰</span>
+  </button>
+
+  <!-- Main Content -->
+  <main id="main-content" class="container mx-auto py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Товары будут динамически подгружаться сюда -->
+  </main>
+
+  <script>
+    // Функция для открытия/закрытия бокового меню
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('hidden');
+    }
+
+    // Пример динамической загрузки категории
+    function loadCategory(category) {
+      // Пример товаров для каждой категории
+      const products = {
+        'Одежда': [
+          { name: 'Футболка', price: '500₽', image: 'https://via.placeholder.com/150' },
+          { name: 'Джинсы', price: '1200₽', image: 'https://via.placeholder.com/150' }
+        ],
+        'Продукты': [
+          { name: 'Яблоки', price: '200₽', image: 'https://via.placeholder.com/150' },
+          { name: 'Молоко', price: '50₽', image: 'https://via.placeholder.com/150' }
+        ],
+        // Дополнительные категории с товарами...
+      };
+
+      // Получение товаров для выбранной категории
+      const selectedProducts = products[category] || [];
+
+      // Очистка контента на странице
+      const mainContent = document.getElementById('main-content');
+      mainContent.innerHTML = '';
+
+      // Заполнение товарами
+      selectedProducts.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'bg-gray-700 rounded-lg overflow-hidden shadow-md';
+        productCard.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <h2 class="text-lg font-semibold">${product.name}</h2>
+            <p class="text-sm text-gray-300">${product.price}</p>
+          </div>
+        `;
+        mainContent.appendChild(productCard);
+      });
+
+      // Закрытие бокового меню после выбора категории
+      toggleSidebar();
+    }
+  </script>
+</body>
+</html>
